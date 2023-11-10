@@ -2,6 +2,7 @@ package com.glowat.openkkutuweb.oauth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 
 /*
     val authVendor: AuthVendor,
@@ -14,6 +15,7 @@ import lombok.Data;
  */
 
 @Data
+@Getter
 public class OAuthUser {
   private final AuthVendor authVendor;
   private final String vendorId;
