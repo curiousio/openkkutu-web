@@ -1,0 +1,68 @@
+server:
+  port: <Port>
+  servlet:
+    session:
+      tracking-modes: cookie
+      timeout: 12h
+      cookie:
+        name: KKUTU-WEB-SESSION
+      persistent: true
+      store-dir: <Your Session Dir>
+
+spring:
+  application:
+    name: kkutu-web
+  thymeleaf:
+    cache: true
+  messages:
+    basename: locale/message
+    encoding: UTF-8
+    fallback-to-system-locale: false
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://<Host>:<Port>/<Database>
+    username: <Username>
+    password: <Password>
+  jpa:
+    open-in-view: false
+  cache:
+    type: simple
+  redis:
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 2
+    host: <Host>
+    port: <Port>
+  cors:
+    pattern: /api/admin/**
+    methods: GET,PUT,PATCH,DELETE
+    allowed-origins: <Origin>
+  security:
+    user:
+      name: <Username>
+      password: <Password>
+  boot:
+    admin:
+      client:
+        url: <Monitoring Server>
+        username: <Username>
+        password: <Password>
+        instance:
+          service-url: <Service Url>
+          metadata:
+            user.name: ${spring.security.user.name}
+            user.password: ${spring.security.user.password}
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+geo:
+  api-key: <Api Key>

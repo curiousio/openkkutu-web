@@ -1,0 +1,90 @@
+<!--
+  ~ KKuTu-Web (https://github.com/KKuTuIO/KKuTu-Web)
+  ~ Copyright (C) 2021 KKuTuIO <admin@kkutu.io>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="kkutu-menu">
+    <button class="for-lobby for-master for-normal for-gaming" id="HelpBtn"
+            style="display: none; background-color: #BBBBBB;" th:utext="#{kkutu.menu.help}"></button>
+    <button class="for-lobby for-master for-normal for-gaming" id="SettingBtn"
+            style="display: none; background-color: #CCCCCC;" th:utext="#{kkutu.menu.setting}"></button>
+    <button class="for-lobby for-master for-normal for-gaming" id="CommunityBtn"
+            style="display: none; background-color: #DAA9FF;" th:utext="#{kkutu.menu.community}"></button>
+    <button class="for-master for-normal" id="SpectateBtn" style="display: none; background-color: #D19DFF;">
+        <i class='fa fa-eye'></i>
+    </button>
+    <button class="for-master" id="SetRoomBtn" style="display: none; background-color: #B0D2F3;">
+        <i class='fa fa-magic'></i>
+    </button>
+    <button class="for-lobby" id="NewRoomBtn" style="display: none; background-color: #8EC0F3;">
+        <i class='fa fa-magic'></i>
+    </button>
+    <button class="for-lobby" id="QuickRoomBtn" style="display: none; background-color: #B0D2F3;">
+        <i class='fa fa-bolt'></i>
+    </button>
+    <button class="for-lobby" id="ShopBtn" style="display: none; background-color: #B3E7B7;">
+        <i class='fa fa-shopping-bag'></i>
+    </button>
+    <button class="for-lobby for-master for-normal for-gaming" id="DictionaryBtn"
+            style="display: none; background-color: #73D07A;">
+        <i class='fa fa-book'></i>
+    </button>
+    <!-- button#WordPlusBtn.for-lobby.for-master.for-normal.for-gaming.for-item(style='display: none; background-color: #73D07A;')= L('wordPlus')-->
+    <button class="for-master" id="InviteBtn" style="display: none; background-color: #9FE669;">
+        <i class='fa fa-envelope'></i>
+    </button>
+    <button class="for-master for-normal" id="PracticeBtn" style="display: none; background-color: #FCF5A9;">
+        <i class='fa fa-plane'></i>
+    </button>
+    <button class="for-normal" id="ReadyBtn" style="display: none; background-color: #FFC67F;">
+        <i class='fa fa-play'></i>
+    </button>
+    <button class="for-master" id="StartBtn" style="display: none; background-color: #FFB576;">
+        <i class='fa fa-play-circle'></i>
+    </button>
+    <button class="for-master for-normal for-gaming" id="ExitBtn" style="display: none; background-color: #FFADAD;">
+        <i class='fa fa-times'></i>
+    </button>
+    <button class="for-lobby" id="ReplayBtn" style="display: none; background-color: #D9FF82;">
+        <i class='fa fa-video-camera'></i>
+    </button>
+    <button class="for-lobby" id="BulletinBtn" style="display: none; background-color: #FFC67F;">
+        <i class='fa fa-bullhorn'></i>
+    </button>
+    <button class="for-lobby" id="LeaderboardBtn" style="display: none; background-color: #FFADD3;">
+        <i class='fa fa-trophy'></i>
+    </button>
+    <button class="for-lobby" id="UserListBtn" style="display: none; background-color: #FF9CB7;">
+        <i class='fa fa-users'></i>
+    </button>
+    <button class="for-lobby" id="EventBtn" style="display: none; background-color: #FF867F;">
+        <i class='fa fa-gift'></i>
+    </button>
+    <div id="ItemMenu">
+        <button class="tiny-menu for-gaming" id="PassItemBtn"
+                style="display: none; background-color: #BBBBBB;" th:utext="#{kkutu.menu.item.pass}"></button>
+        <button class="tiny-menu for-gaming" id="SkipItemBtn"
+                style="display: none; background-color: #CCCCCC;" th:utext="#{kkutu.menu.item.skip}"></button>
+        <button class="tiny-menu for-gaming" id="BackItemBtn"
+                style="display: none; background-color: #BBBBBB;" th:utext="#{kkutu.menu.item.back}"></button>
+        <button class="tiny-menu for-gaming" id="RandomItemBtn"
+                style="display: none; background-color: #CCCCCC;" th:utext="#{kkutu.menu.item.random}"></button>
+        <button class="tiny-menu for-gaming" id="OneMoreItemBtn"
+                style=" display: none; background-color: #BBBBBB;" th:utext="#{kkutu.menu.item.onemore}"></button>
+        <button class="tiny-menu for-gaming" id="TossItemBtn"
+                style="display: none; background-color: #CCCCCC;" th:utext="#{kkutu.menu.item.toss}"></button>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<!--
+  ~ KKuTu-Web (https://github.com/KKuTuIO/KKuTu-Web)
+  ~ Copyright (C) 2021 KKuTuIO <admin@kkutu.io>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<nav class="m navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header"><a class="navbar-brand-sub" href="https://kkutu.io" style="margin-left:10px;"><img src="https://cdn.kkutu.io/img/bi/bi_white.svg" alt="끄투리오" height="25px"/></a></div>
+        <ul class="nav m navbar-nav navbar-right">
+            <div id="account"><span id="profile" th:text="${profile == 'null' ? '{}' : profile}"></span>
+                <div id="account-info"></div>
+            </div>
+        </ul>
+    </div>
+</nav>

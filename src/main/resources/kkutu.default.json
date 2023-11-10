@@ -1,0 +1,27 @@
+{
+  "version": "3.0.0",
+  "maxPlayers": 400,
+  "gameServers": [
+    {
+      "is-secure": true,
+      "public-host": "<Your WebSocket Domain>",
+      "key": "<Key>",
+      "host": "127.0.0.2",
+      "port": 8080,
+      "cid": 1
+    }
+  ],
+  "admins": [
+    {
+      "id": "<User ID>",
+      "name": "<User Name>",
+      "team": "<Team Name>",
+      "privileges": [
+        "CONNECTION_LOG",
+        "WORD"
+      ]
+    }
+  ],
+  "apiKey": "<API Key>",
+  "cryptoKey": "<32-Bit Secret Key>"
+}

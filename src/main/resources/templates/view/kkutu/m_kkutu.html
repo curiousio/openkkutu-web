@@ -1,0 +1,832 @@
+<!--
+  ~ KKuTu-Web (https://github.com/KKuTuIO/KKuTu-Web)
+  ~ Copyright (C) 2021 KKuTuIO <admin@kkutu.io>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div th:remove="tag" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+    <link rel="stylesheet" th:href="@{'https://cdn.kkutu.io/css/in_game_kkutu_shop.css?rv=' + ${runnerVersion}}"/>
+    <link rel="stylesheet" th:href="@{'https://cdn.kkutu.io/css/in_m_kkutu.css?rv=' + ${runnerVersion}}"/>
+
+    <span id="PUBLIC">true</span>
+    <!-- span#PORT= locals.PORT-->
+    <span id="URL" th:text="${websocketUrl}"></span>
+    <span id="MOREMI_PART" th:text="${moremiParts}"></span>
+    <span id="AVAIL_EQUIP" th:text="${moremiEquips}"></span>
+    <span id="RULE" th:text="${gameRules}"></span>
+    <span id="OPTIONS" th:text="${gameOptions}"></span>
+
+    <div id="Intro">
+        <img id="intro" src="https://cdn.kkutu.io/img/kkutu/m_intro.png" alt="로딩 이미지">
+        <img class="game-grade-badge" th:src="@{https://cdn.kkutu.io/img/game_grade_all.png}" src="" alt="전체이용가"/>
+        <!-- img#intro-start(src='https://cdn.kkutu.io/img/kkutu/intro_start.gif')-->
+        <div id="version" th:text="${version + ' (모바일)'}"></div>
+        <div id="intro-text" th:text="#{kkutu.loading}"></div>
+    </div>
+    <th:block th:replace="view/kkutu/m_menu"/>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='SettingDiag',width=300,height=372,title=#{kkutu.dialog.setting.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.setting.bgm-volume}"></h4>
+                <th:block layout:replace="~{view/kkutu/option::settingOptionVolume(id='volume-bgm')}"/>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.setting.effect-volume}"></h4>
+                <th:block layout:replace="~{view/kkutu/option::settingOptionVolume(id='volume-effect')}"/>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.setting.deny-request.title}"></h4>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='deny-invite',text=#{kkutu.dialog.setting.deny-request.invite})}"/>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='deny-whisper',text=#{kkutu.dialog.setting.deny-request.whisper})}"/>
+                <h4></h4>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='deny-friend',text=#{kkutu.dialog.setting.deny-request.friend})}"/>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.setting.game.title}"></h4>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='auto-ready',text=#{kkutu.dialog.setting.game.auto-ready})}"/>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='allow-badword',text=#{kkutu.dialog.setting.game.allow-badword})}"/>
+                <h4></h4>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='enable-vibration',text=#{kkutu.dialog.setting.game.enable-vibration})}"/>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.setting.etc.title}"></h4>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='sort-user',text=#{kkutu.dialog.setting.etc.sort-user},style='width: 200px')}"/>
+                <h4></h4>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='only-waiting',text=#{kkutu.dialog.setting.etc.only-waiting},style='width: 200px')}"/>
+                <h4></h4>
+                <th:block
+                        layout:replace="~{view/kkutu/option::settingOption(id='only-unlock',text=#{kkutu.dialog.setting.etc.only-unlock},style='width: 200px')}"/>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.setting.lobby-bgm.title}"></h4>
+                <select id="select-lobby-bgm">
+                    <option th:text="#{kkutu.dialog.setting.lobby-bgm.info}" disabled>배경 음악을 선택하세요.</option>
+                    <option th:value="LobbyBGM">오리지널 끄투 (2014)</option>
+                    <option th:value="LobbyBGM_2017">끄투리오 (2017)</option>
+                    <option th:value="LobbyBGM_NEW">새로운 시작 (2020)</option>
+                    <option th:value="LobbyBGM_2023_Summer">끄투리오 여름 (2023)</option>
+                    <option th:value="LobbyBGM_2022_Fall">끄투리오 가을 (2022)</option>
+                    <option th:value="LobbyBGM_2023_Winter">끄투리오 신년맞이 (2023)</option>
+                    <option th:value="LobbyBGM_2023_6th" selected>끄투리오 6주년 (2023)</option>
+                    <!-- <option th:value="LobbyBGMSeolBGM">끄투 명절</option> -->
+                    <!-- <option th:value="LobbyBGM_KKuTuIO_Seol">끄투리오 명절</option> -->
+                </select>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.setting.bgm.title}"></h4>
+                <select id="select-bgm">
+                    <option th:text="#{kkutu.dialog.setting.bgm.info}" disabled>효과음을 선택하세요.</option>
+                    <option th:value="kkutu" selected>오리지널 끄투</option>
+                    <option th:value="new_start">새로운 시작</option>
+                </select>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="setting-ok" th:text="#{kkutu.dialog.setting.save}"></button>
+                <button id="setting-server" th:text="#{kkutu.dialog.setting.change-server}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/dialog::dialog(id='CommunityDiag',width=300,height=300)}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar" style="height: 225px; overflow-y: scroll;">
+                <div id="comm-friends"></div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="comm-friend-add" th:text="#{kkutu.dialog.community.friend-add}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='LeaderboardDiag',width=300,height=450,title=#{kkutu.dialog.leaderboard.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar" style="height: 350px;">
+                <table id="ranking" style="text-align: center;">
+                    <thead style="font-weight: bold; background-color: #DDDDDD;">
+                    <tr>
+                        <td width="30">#</td>
+                        <td th:text="#{kkutu.dialog.leaderboard.level}" width="55">레벨</td>
+                        <td th:text="#{kkutu.dialog.leaderboard.name}" width="115">이름</td>
+                        <td th:text="#{kkutu.dialog.leaderboard.totalExp}" width="100">총 경험치</td>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="dialog-bar">
+                <h4 id="lb-page" style="width: 100%;"></h4>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="lb-next" style="margin-right: 6px;" th:text="#{kkutu.dialog.leaderboard.next}">다음</button>
+                <button id="lb-me" th:text="#{kkutu.dialog.leaderboard.me}">내 순위</button>
+                <button id="lb-prev" th:text="#{kkutu.dialog.leaderboard.prev}">이전</button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='QuickDiag',width=320,height=320,title=#{kkutu.dialog.quick.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.quick.gameMode}"></h4>
+                <select id="quick-mode">
+                    <option th:each="gameMode,data : ${gameModes}" th:text="#{'game.mode.' + ${gameMode} + '.name'}"
+                            th:value="${data.index}"></option>
+                </select>
+            </div>
+
+            <div class="dialog-bar" style="height: 140px;">
+                <h4 style="height: 100%;" th:text="#{kkutu.dialog.quick.gameRule}"></h4>
+                <th:block th:each="entry : ${gameOptionMap}">
+                    <th:block layout:replace="~{view/kkutu/option::gameOption(key=${entry.key},prefix='quick')}"/>
+                </th:block>
+            </div>
+            <div class="dialog-bar"><h4 id="quick-status" style="width: 100%; height: 20px;"></h4></div>
+            <div class="dialog-bar"><h4 id="quick-queue" style="width: 100%; height: 20px;"></h4></div>
+            <!--<div class="quick-kakao" style="margin-top: 10px; margin-left: 40px;">
+                <ins class="kakao_ad_area"
+                     style="display:none;"
+                     data-ad-unit = "DAN-RLZCqSs9HpnNdH98"
+                     data-ad-width = "320"
+                     data-ad-height = "50">
+                </ins>
+            </div>-->
+            <div class="dialog-bar tail-button">
+                <button id="quick-ok" th:text="#{kkutu.dialog.quick.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/dialog::dialog(id='RoomDiag',width=300,height=495)}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.room.room-title}"></h4>
+                <input id="room-title" maxlength="20" autocomplete="off"
+                       th:with="pHolder=#{kkutu.dialog.room.room-title.placeholder}"
+                       th:placeholder="${nickname + pHolder}">
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.room.password}"></h4>
+                <input id="room-pw" maxlength="20" th:placeholder="#{kkutu.dialog.room.password}" type="password">
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.room.user-limit}"></h4>
+                <input id="room-limit" max="8" min="2" step="1" type="number" value="8">
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.room.gameMode}"></h4>
+                <select id="room-mode">
+                    <optgroup label="한국어">
+                        <option value="3" th:text="#{'game.mode.KSH.name'}">한국어 끝말잇기</option>
+                        <option value="2" th:text="#{'game.mode.KKT.name'}">한국어 쿵쿵따</option>
+                        <option value="8" th:text="#{'game.mode.KAP.name'}">한국어 앞말잇기</option>
+                        <option value="6" th:text="#{'game.mode.KTY.name'}">한국어 타자 대결</option>
+                        <option value="10" th:text="#{'game.mode.KDA.name'}">한국어 단어 대결</option>
+                        <option value="5" th:text="#{'game.mode.KCW.name'}">한국어 십자말풀이</option>
+                        <option value="12" th:text="#{'game.mode.KSS.name'}">한국어 솎솎</option>
+                        <option value="15" th:text="#{'game.mode.KWS.name'}">한국어 워드스택</option>
+                        <option value="4" th:text="#{'game.mode.CSQ.name'}">자음퀴즈</option>
+                        <option value="9" th:text="#{'game.mode.HUN.name'}">훈민정음</option>
+                    </optgroup>
+                    <optgroup label="영어">
+                        <option value="1" th:text="#{'game.mode.ESH.name'}">영어 끝말잇기</option>
+                        <option value="0" th:text="#{'game.mode.EKT.name'}">영어 끄투</option>
+                        <option value="14" th:text="#{'game.mode.EAP.name'}">영어 앞말잇기</option>
+                        <option value="7" th:text="#{'game.mode.ETY.name'}">영어 타자 대결</option>
+                        <option value="11" th:text="#{'game.mode.EDA.name'}">영어 단어 대결</option>
+                        <option value="13" th:text="#{'game.mode.ESS.name'}">영어 솎솎</option>
+                        <option value="16" th:text="#{'game.mode.EWS.name'}">영어 워드스택</option>
+                    </optgroup>
+                </select></div>
+            <div class="dialog-bar" style="margin-top: -5px; height: 50px;">
+                <h4></h4>
+                <h4 class="dialog-bar-value" id="game-mode-expl" style="width: 100%; font-size: 11px;"></h4>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.room.roundCount}"></h4>
+                <input id="room-round" max="10" min="1" step="1" type="number" value="5">
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.room.roundTime}"></h4>
+                <select id="room-time">
+                    <option style="color: #FF4444;" value="10"></option>
+                    <option value="30"></option>
+                    <option selected value="60"></option>
+                    <option value="90"></option>
+                    <option value="120"></option>
+                    <option value="150"></option>
+                </select></div>
+            <div class="dialog-bar" style="height: 180px;">
+                <h4 style="height: 100%;" th:text="#{kkutu.dialog.room.gameRule}"></h4>
+                <th:block th:each="entry : ${gameOptionMap}">
+                    <th:block layout:replace="~{view/kkutu/option::gameOption(key=${entry.key},prefix='room')}"/>
+                </th:block>
+
+                <div class="dialog-opt" id="room-injpick-panel">
+                    <button id="room-injeong-pick" style="font-size: 11px;"
+                            th:text="#{kkutu.dialog.room.pickInjeong}"></button>
+                </div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="room-ok" th:text="#{kkutu.dialog.room.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='InjPickDiag',width=200,height=400,title=#{kkutu.dialog.injPick.title})}">
+        <th:block layout:fragment="content">
+            <h4 th:text="#{kkutu.dialog.injPick.expl}"></h4>
+            <div class="dialog-bar">
+                <button id="injpick-all" th:text="#{kkutu.dialog.injPick.selectAll}"></button>
+                <button id="injpick-no" th:text="#{kkutu.dialog.injPick.deselectAll}"></button>
+            </div>
+            <div class="dialog-bar" id="injpick-list" style="height: 280px; overflow-y: scroll;">
+                <div class="dialog-opt" id="ko-pick-list" style="width: 100%;">
+                    <div style="float: left; width: 100%;" th:each="theme : ${koThemes}">
+                        <input style="width: auto;" th:id="${'ko-pick-' + theme}" type="checkbox">
+                        <label th:for="${'ko-pick-' + theme}" th:text="#{'word.theme.' + ${theme}}"></label>
+                    </div>
+                </div>
+                <div class="dialog-opt" id="en-pick-list" style="width: 100%;">
+                    <div style="float: left; width: 100%;" th:each="theme : ${enThemes}">
+                        <input style="width: auto;" th:id="${'en-pick-' + theme}" type="checkbox">
+                        <label th:for="${'en-pick-' + theme}" th:text="#{'word.theme.' + ${theme}}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="injpick-ok" th:text="#{kkutu.dialog.injPick.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/dialog::dialog(id='PracticeDiag',width=300,height=135)}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.practice.level}"></h4>
+                <select id="practice-level">
+                    <option th:text="#{kkutu.dialog.practice.level.0}" value="0"></option>
+                    <option th:text="#{kkutu.dialog.practice.level.1}" value="1"></option>
+                    <option th:text="#{kkutu.dialog.practice.level.2}" value="2"></option>
+                    <option selected th:text="#{kkutu.dialog.practice.level.3}" value="3"></option>
+                    <option th:text="#{kkutu.dialog.practice.level.4}" value="4"></option>
+                    <option th:text="#{kkutu.dialog.practice.level.5}" value="5"></option>
+                </select>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.practice.team}"></h4>
+                <select id="ai-team">
+                    <option selected th:text="#{kkutu.dialog.practice.team.solo}" value="0"></option>
+                    <option value="1">A</option>
+                    <option value="2">B</option>
+                    <option value="3">C</option>
+                    <option value="4">D</option>
+                </select>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="practice-ok" th:text="#{kkutu.dialog.practice.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='ResultDiag',width=300,height=470,title=#{kkutu.dialog.result.title},nocls=true)}">
+        <th:block layout:fragment="content">
+            <div class="result-board"></div>
+            <div class="result-me">
+                <div class="result-me-score"></div>
+                <div class="result-me-money"></div>
+                <div class="result-me-level">
+                    <div class="result-me-level-head" th:text="#{kkutu.dialog.result.level}"></div>
+                    <div class="result-me-level-body"></div>
+                </div>
+                <div class="graph result-me-gauge">
+                    <div class="graph-bar" style="width: NaN%;"></div>
+                </div>
+                <div class="result-me-score-text"></div>
+                <div class="expl result-me-expl"></div>
+            </div>
+            <div class="result-kakao" style="margin-top: 5px; margin-left: 40px;">
+                <ins class="kakao_ad_area"
+                     style="display:none;"
+                     data-ad-unit = "DAN-TPldT9XX1CsnlOuR"
+                     data-ad-width = "320"
+                     data-ad-height = "50">
+                </ins>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="result-ok" th:text="#{kkutu.dialog.result.ok}"></button>
+                <button id="result-save" th:text="#{kkutu.dialog.result.saveReplay}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='DictionaryDiag',width=300,height=300,title=#{kkutu.dialog.dict.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.dict.wpHere}"></h4>
+                <input id="dict-input" maxlength="200" style="width: 183px;"
+                       th:placeholder="#{kkutu.dialog.dict.wpInput}">
+            </div>
+            <div class="dialog-bar" id="dict-output"
+                 style="height: 195px; overflow-y: scroll; color: #BBBBBB; background-color: #111111;"></div>
+            <div class="dialog-bar tail-button">
+                <button id="dict-search" th:text="#{kkutu.dialog.dict.searchBtn}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='InviteDiag',width=300,height=420,title=#{kkutu.dialog.invite.title})}">
+        <th:block layout:fragment="content">
+            <div class="invite-board" style="height: 355px; overflow-y: scroll;"></div>
+            <div class="dialog-bar tail-button">
+                <select id="ai-level">
+                    <option disabled th:text="#{kkutu.dialog.invite.level}"></option>
+                    <option value="0" th:text="#{kkutu.dialog.invite.level.0}"></option>
+                    <option value="1" th:text="#{kkutu.dialog.invite.level.1}"></option>
+                    <option value="2" th:text="#{kkutu.dialog.invite.level.2}"></option>
+                    <option value="3" selected th:text="#{kkutu.dialog.invite.level.3}"></option>
+                    <option value="4" th:text="#{kkutu.dialog.invite.level.4}"></option>
+                    <option value="5" th:text="#{kkutu.dialog.invite.level.5}"></option>
+                </select>
+                <button id="invite-robot" th:text="#{kkutu.dialog.invite.inviteAI}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/dialog::dialog(id='RoomInfoDiag',width=300,height=365)}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar room-info-head">
+                <h4 th:text="#{kkutu.dialog.roomInfo.roomTitle}"></h4>
+                <h4 class="dialog-bar-value ellipse" id="ri-title"></h4>
+                <h4 th:text="#{kkutu.dialog.roomInfo.gameMode}"></h4>
+                <h4 class="dialog-bar-value" id="ri-mode"></h4>
+                <h4 th:text="#{kkutu.dialog.roomInfo.rounds}"></h4>
+                <h4 class="dialog-bar-value" id="ri-round"></h4>
+            </div>
+            <div class="dialog-bar" style="padding: 2px 0px; border-top: 1px dashed #CCC; margin: 2px 0px;">
+                <h4 th:text="#{kkutu.dialog.roomInfo.players}"></h4>
+                <h4 class="dialog-bar-value" id="ri-limit"></h4>
+            </div>
+            <div class="dialog-bar" style="height: 190px; overflow-y: scroll;">
+                <div id="ri-players" style="width: 100%;"></div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="room-info-join" th:text="#{kkutu.dialog.roomInfo.joinBtn}"></button>
+                <button id="room-info-master" th:text="#{kkutu.dialog.roomInfo.masterBtn}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/dialog::dialog(id='ProfileDiag',width=350,height=390)}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar profile-head"></div>
+            <div class="dialog-bar">
+                <h4 style="width: 83px;" th:text="#{kkutu.dialog.profile.place}"></h4>
+                <h4 class="dialog-bar-value" id="profile-place"></h4>
+            </div>
+            <div class="dialog-bar profile-record"
+                 style="padding: 2px 0px; border-top: 1px dashed #CCC; margin: 2px 0px; height: 175px; overflow-y: scroll;">
+                <div class="profile-record-field" style="font-weight: bold; text-align: center;">
+                    <div class="profile-field-name" th:text="#{kkutu.dialog.profile.gameMode}"></div>
+                    <div class="profile-field-record" th:text="#{kkutu.dialog.profile.record}"></div>
+                    <div class="profile-field-win-rate" th:text="#{kkutu.dialog.profile.winRate}"></div>
+                    <div class="profile-field-score" th:text="#{kkutu.dialog.profile.totalExp}"></div>
+                </div>
+                <div id="profile-record"></div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="profile-whisper" th:text="#{kkutu.dialog.profile.whisper}">귓속말</button>
+                <button id="profile-shut" th:text="#{kkutu.dialog.profile.block}">차단</button>
+                <button id="profile-kick" th:text="#{kkutu.dialog.profile.kick}">강제퇴장</button>
+                <button id="profile-report" th:text="#{kkutu.dialog.profile.report}">신고하기</button>
+                <button id="profile-level" th:text="#{kkutu.dialog.profile.aiSetting}">AI 설정</button>
+                <button id="profile-dress" th:text="#{kkutu.dialog.profile.dress}">프로필 관리</button>
+                <button id="profile-handover" th:text="#{kkutu.dialog.profile.handover}">방장 인계</button>
+                <button id="profile-copy" th:text="#{kkutu.dialog.profile.copyId}">ID 복사</button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='ReportDialog',width=350,height=265,title='끄투리오 사용자 신고하기')}">
+        <th:block layout:fragment="content">
+            <b th:text="#{kkutu.dialog.report.category}"></b>
+            <select id="rsl" style="width:100%;margin-top:5px;margin-bottom:5px;">
+                <option th:text="#{kkutu.dialog.report.category}" disabled selected></option>
+                <option th:text="#{kkutu.dialog.report.category.01}" value="01"></option>
+                <option th:text="#{kkutu.dialog.report.category.02}" value="02"></option>
+                <option th:text="#{kkutu.dialog.report.category.03}" value="03"></option>
+                <option th:text="#{kkutu.dialog.report.category.04}" value="04"></option>
+                <option th:text="#{kkutu.dialog.report.category.05}" value="05"></option>
+                <option th:text="#{kkutu.dialog.report.category.06}" value="06"></option>
+                <option th:text="#{kkutu.dialog.report.category.07}" value="07"></option>
+                <option th:text="#{kkutu.dialog.report.category.08}" value="08"></option>
+                <option th:text="#{kkutu.dialog.report.category.09}" value="09"></option>
+                <option th:text="#{kkutu.dialog.report.category.10}" value="10"></option>
+                <option th:text="#{kkutu.dialog.report.category.11}" value="11"></option>
+                <option th:text="#{kkutu.dialog.report.category.12}" value="12"></option>
+                <option th:text="#{kkutu.dialog.report.category.13}" value="13"></option>
+                <option th:text="#{kkutu.dialog.report.category.14}" value="14"></option>
+                <option th:text="#{kkutu.dialog.report.category.15}" value="15"></option>
+                <option th:text="#{kkutu.dialog.report.category.16}" value="16"></option>
+                <option th:text="#{kkutu.dialog.report.category.17}" value="17"></option>
+                <option th:text="#{kkutu.dialog.report.category.00}" value="00" reqLength></option>
+            </select>
+            <b th:text="#{kkutu.dialog.report.tail}"></b>
+            <textarea id="rst"
+                      maxlength="250"
+                      placeholder="신고 사유를 250자 이내로 상세 입력해주세요. 상세하게 입력하실수록 빠른 처리가 가능해집니다."
+                      style="width:calc(100% - 12px);height:115px;margin-top:5px;"></textarea>
+            <div class="dialog-bar tail-button">
+                <button id="report-ok" th:text="#{kkutu.dialog.report.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='PolicyDiag',width=350,height=415,title=#{kkutu.dialog.policy.title})}">
+        <th:block layout:fragment="content">
+            <h4 style="font-weight: bold" th:text="#{kkutu.dialog.policy.operation}"></h4>
+            <div style="float: right; width: 100%; background-color: #FFF; border: 1px solid #CCC; margin-bottom: 10px;">
+                <iframe id="operation-policy" width="100%" style="height: 120px;"></iframe>
+            </div>
+            <h4 style="font-weight: bold" th:text="#{kkutu.dialog.policy.privacy}"></h4>
+            <div style="float: right; width: 100%; background-color: #FFF; border: 1px solid #CCC; margin-bottom: 10px;">
+                <iframe id="privacy-policy" width="100%" style="height: 120px;"></iframe>
+            </div>
+            <div class="dialog-bar">
+                <p style="font-size: 11px; margin: 0;" th:text="#{kkutu.dialog.policy.tail}"></p>
+            </div>
+            <button id="policy-ok" th:text="#{kkutu.dialog.policy.ok}"></button>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='MessageDiag',width=300,height=150,title=#{kkutu.dialog.message.title})}">
+        <th:block layout:fragment="content">
+            <div class="msg-style" id="message-content" style="height: 80px;"></div>
+            <div class="dialog-bar tail-button">
+                <button id="message-no" th:text="#{kkutu.dialog.message.no}"></button>
+                <button id="message-ok" th:text="#{kkutu.dialog.message.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='PromptDiag',width=300,height=150,title=#{kkutu.dialog.message.title})}">
+        <th:block layout:fragment="content">
+            <div class="msg-style" id="prompt-content" style="height: 60px;"></div>
+            <input id="prompt-input" type="text" placeholder="입력..." style="width: calc(100% - 12px);">
+            <div class="dialog-bar tail-button">
+                <button id="prompt-no" th:text="#{kkutu.dialog.message.no}"></button>
+                <button id="prompt-ok" th:text="#{kkutu.dialog.message.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='WhichHandDiag',width=300,height=115,title=#{kkutu.dialog.message.title})}">
+        <th:block layout:fragment="content">
+            <div class="msg-style" id="hand-content" th:text="#{kkutu.js.dressWhichHand}" style="height: 50px;"></div>
+            <div class="dialog-bar tail-button">
+                <button id="hand-no" th:text="#{kkutu.dialog.message.no}"></button>
+                <button id="hand-right" th:text="#{kkutu.dialog.message.right}"></button>
+                <button id="hand-left" th:text="#{kkutu.dialog.message.left}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='KickVoteDiag',width=300,height=160,title=#{kkutu.dialog.kickVote.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar" id="kick-vote-text" style="text-align: center;"></div>
+            <div class="dialog-bar" style="text-align: center;" th:text="#{kkutu.dialog.kickVote.notice}"></div>
+            <div class="dialog-bar">
+                <div class="graph kick-vote-time">
+                    <div class="graph-bar" style="width: NaN%;"></div>
+                </div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="kick-vote-no" th:text="#{kkutu.dialog.kickVote.no}"></button>
+                <button id="kick-vote-yes" th:text="#{kkutu.dialog.kickVote.yes}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='PurchaseDiag',width=300,height=205,title=#{kkutu.dialog.purchase.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.purchase.pingBefore}"></h4>
+                <h4 class="dialog-bar-value purchase-ping" id="purchase-ping-before"></h4>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.purchase.pingCost}"></h4>
+                <h4 class="dialog-bar-value purchase-ping" id="purchase-ping-cost"></h4>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.purchase.pingAfter}"></h4>
+                <h4 class="dialog-bar-value purchase-ping" id="purchase-ping-after"></h4>
+            </div>
+            <div class="dialog-bar">
+                <h4 id="purchase-item-name" style="width: 100%; font-weight: bold;"></h4>
+            </div>
+            <div class="dialog-bar">
+                <h4 id="purchase-item-desc" style="width: 100%;"></h4>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="purchase-no" th:text="#{kkutu.dialog.purchase.cancel}"></button>
+                <button id="purchase-ok" th:text="#{kkutu.dialog.purchase.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='ReplayDiag',width=300,height=300,title=#{kkutu.dialog.replay.title})}">
+        <th:block layout:fragment="content">
+            <input accept=".kkio" id="replay-file" style="width: 288px;" type="file">
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.replay.recordDate}"></h4>
+                <h4 class="dialog-bar-value" id="replay-date">-</h4>
+            </div>
+            <div class="dialog-bar">
+                <h4 th:text="#{kkutu.dialog.replay.recordPlayers}"></h4>
+                <h4 class="dialog-bar-value" id="replay-players">-</h4>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="replay-view" th:text="#{kkutu.dialog.replay.viewBtn}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='DressDiag',width=350,height=315,title=#{kkutu.dialog.dress.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 style="width: 150px;" th:text="#{kkutu.dialog.dress.nickname.name}"></h4>
+                <input id="dress-nickname" maxlength="18"
+                       th:placeholder="#{kkutu.dialog.dress.nickname.placeHolder}" type="textfield"></div>
+            <div class="dialog-bar">
+                <h4 style="width: 150px;" th:text="#{kkutu.dialog.dress.exordial.name}"></h4>
+                <input id="dress-exordial" maxlength="100"
+                       th:placeholder="#{kkutu.dialog.dress.exordial.placeHolder}" type="textfield">
+            </div>
+            <div class="dialog-bar" style="padding: 5px; width: 340px;">
+                <div style="border-bottom: 1px solid #CCCCCC; height: 40px;">
+                    <th:block th:each="moremiCategory : ${moremiCategories}">
+                        <div class="category-filter dress-type" th:id="${'dress-type-' + moremiCategory}"
+                             th:text="#{'item.category.' + ${moremiCategory}}"
+                             th:value="${#strings.listJoin(moremiGroups.get(moremiCategory), ',')}">
+                        </div>
+                    </th:block>
+                </div>
+                <div class="goods-box" id="dress-goods"></div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="dress-ok" th:text="#{kkutu.dialog.dress.ok}"></button>
+                <button id="dress-cf" th:text="#{kkutu.dialog.dress.charFactory}"></button>
+                <button id="dress-sell"
+                        th:text="#{kkutu.dialog.dress.payback}"
+                        th:with="paybackHelp=#{kkutu.dialog.dress.paybackHelp}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='CharFactoryDiag',width=350,height=490,title=#{kkutu.dialog.charFactory.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar" style="width: 350px;">
+                <div id="cf-tray"></div>
+                <div id="cf-dict"></div>
+            </div>
+            <div class="dialog-bar" style="width: 350px;"><!--<h4
+                    style="border-bottom: 1px solid #CCCCCC; width: 100%; height: 24px;"
+                    th:text="#{kkutu.dialog.charFactory.cfReward}"></h4>-->
+                <div id="cf-reward"></div>
+            </div>
+            <div class="dialog-bar" style="width: 350px;">
+                <div id="cf-cost"></div>
+            </div>
+            <div class="dialog-bar" id="cf-goods-list">
+                <div class="goods-box" id="cf-goods"></div>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="cf-compose" th:text="#{kkutu.dialog.charFactory.cfCompose}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='ChatLogDiag',width=300,height=500,title=#{kkutu.dialog.chatLog.title})}">
+        <th:block layout:fragment="content">
+            <div id="chat-log-board" style="height: 475px; font-size: 11px; overflow-y: scroll;"></div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='ObtainDiag',width=300,height=200,title=#{kkutu.dialog.obtain.title},nocls=true)}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 style="width: 100%;" th:text="#{kkutu.dialog.obtain.obtained}"></h4>
+            </div>
+            <div class="jt-image" id="obtain-image" style="margin-left: 110px; width: 80px; height: 80px;"></div>
+            <div class="dialog-bar" id="obtain-name" style="text-align: center;"></div>
+            <div class="dialog-bar tail-button">
+                <button id="obtain-ok" th:text="#{kkutu.dialog.obtain.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='HelpDiag',width=300,height=400,title=#{kkutu.dialog.help.title})}">
+        <th:block layout:fragment="content">
+            <iframe height="375" id="help-board" width="300"></iframe>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='BulletinDiag',width=300,height=400,title=#{kkutu.dialog.bulletin.title})}">
+        <th:block layout:fragment="content">
+            <iframe id="bulletin-board" width="300" height="375"></iframe>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/dialog::dialog(id='ExchangeDiag',width=300,height=430,title=#{kkutu.dialog.exchange.title})}">
+        <th:block layout:fragment="content">
+            <div class="dialog-bar">
+                <h4 id="exchange-cost-desc" th:text="#{kkutu.dialog.exchange.cost}" style="width: 100%;"></h4>
+            </div>
+            <div id="exchange-cost" class="dialog-bar" style="height: 180px; overflow-y: scroll"></div>
+            <div class="dialog-bar">
+                <h4 id="exchange-gives-desc" th:text="#{kkutu.dialog.exchange.gives}" style="width: 100%;"></h4>
+            </div>
+            <div id="exchange-gives" class="dialog-bar" style="height: 90px; overflow-y: scroll"></div>
+            <div class="dialog-bar">
+                <h4 id="exchange-message" style="width: 100%;"></h4>
+            </div>
+            <div class="dialog-bar tail-button">
+                <button id="exchange-no" th:text="#{kkutu.dialog.exchange.cancel}"></button>
+                <button id="exchange-ok" th:text="#{kkutu.dialog.exchange.ok}"></button>
+            </div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/product::product(id='UserList',title=#{kkutu.product.userList.title})}"
+            style="display: none;">
+        <th:block layout:fragment="content">
+            <div th:text="#{kkutu.product.userList.loading}"></div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/product::product(id='EventList',title=#{kkutu.product.eventList.title})}"
+            style="display: none;">
+        <th:block layout:fragment="content"></th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/product::product(id='RoomList',title=#{kkutu.product.roomList.title})}">
+        <th:block layout:fragment="content">
+            <div th:text="#{kkutu.product.roomList.loading}"></div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/product::product(id='Shop',title=#{kkutu.product.shop.title})}">
+        <th:block layout:fragment="content">
+            <div class="eventFrame"></div>
+            <div class="shop-categories">
+                <th:block th:each="moremiCategory : ${moremiCategories}">
+                    <div class="category-filter shop-type" th:id="${'shop-type-' + moremiCategory}"
+                         th:value="${#strings.listJoin(moremiGroups.get(moremiCategory), ',')}"
+                         th:text="#{'item.category.' + ${moremiCategory}}">
+                    </div>
+                </th:block>
+                <th:block>
+                    <div class="category-filter shop-type event-category" id="shop-type-exchange"
+                        value="exchange"
+                        th:text="#{'item.category.exchange'}">
+                    </div>
+                    <div class="category-filter shop-type event-category" id="shop-type-convert"
+                        value="convert"
+                        th:text="#{'item.category.convert'}">
+                    </div>
+                </th:block>
+            </div>
+            <a target="_blank" class="category-filter shop-type event-category"
+               style="width: 100px !important; float: right; display: block; margin: -3px 0px 5px 0px"
+               th:text="#{'item.info.text'}" th:href="#{'item.info.href'}"></a>
+            <div id="shop-shelf" style="width: 100%; height: 320px; overflow-y: scroll;"></div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/product::product(id='Room',title=#{kkutu.product.room.title})}">
+        <th:block layout:fragment="content">
+            <div class="team-selector">
+                <div class="team-button team-0" id="team-0" th:text="#{kkutu.product.room.teamSolo}"></div>
+                <div class="team-button team-1" id="team-1">A</div>
+                <div class="team-button team-2" id="team-2">B</div>
+                <div class="team-button team-3" id="team-3">C</div>
+                <div class="team-button team-4" id="team-4">D</div>
+            </div>
+            <div class="room-users"></div>
+        </th:block>
+    </th:block>
+    <th:block layout:replace="~{view/kkutu/product::product(id='Game',title=#{kkutu.product.game.title})}">
+        <th:block layout:fragment="content">
+            <div class="game-head">
+                <div class="b-left bb" style="display: none;"></div>
+                <div class="b-left cwcmd" style="display: none;">
+                    <div class="cw-q-head"></div>
+                    <input id="cw-q-input" style="width: 313px; height: 20px; font-size: 15px;"
+                           th:placeholder="#{kkutu.product.game.inputHere}">
+                    <div class="cw-q-body"></div>
+                </div>
+                <div class="jjoriping"><img class="jjoObj jjoEyeL"
+                                            src="https://cdn.kkutu.io/img/jjoeyeL.png" alt="캐릭터 왼쪽 눈"><img
+                        class="jjoObj jjoNose" src="https://cdn.kkutu.io/img/jjonose.png" alt="캐릭터 코"><img
+                        class="jjoObj jjoEyeR" src="https://cdn.kkutu.io/img/jjoeyeR.png" alt="캐릭터 오른쪽 눈">
+                    <div class="jjoDisplayBar">
+                        <div class="jjo-display"></div>
+                        <div class="graph jjo-turn-time">
+                            <div class="graph-bar" style="width: NaN%;"></div>
+                        </div>
+                        <div class="graph jjo-round-time">
+                            <div class="graph-bar" style="width: NaN%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="items"></div>
+                <div class="hints" style="display: none;"></div>
+                <div class="chain"></div>
+                <div class="rounds"></div>
+                <div class="history-holder">
+                    <div class="history"></div>
+                </div>
+            </div>
+            <div class="game-body"></div>
+            <div class="game-input">
+                <input id="game-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" th:placeholder="#{kkutu.product.game.yourTurn}">
+            </div>
+        </th:block>
+    </th:block>
+    <div class="ChatBox Product" style="display:none">
+        <h5 class="product-title">
+            <span th:utext="#{kkutu.product.chat.title}" style="display: block"></span>
+        </h5>
+        <div style="display: flex;float: right;margin-top: -22px">
+            <input type="checkbox" id="chat-auto-scroll-cbx" checked="checked" style="margin-top: 1px"/>
+            <label for="chat-auto-scroll-cbx" style="font-size: 12px;margin-right: 5px">채팅 자동 스크롤</label>
+        </div>
+        <div class="product-body">
+            <div id="Chat"></div>
+            <input class="chat-input" id="Talk" maxlength="180" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                   style="display:none;visibility:hidden;">
+            <input class="chat-input" id="MessageInput" maxlength="180" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <button id="ChatBtn" th:text="#{kkutu.product.chat.sendBtn}"></button>
+        </div>
+    </div>
+    <th:block layout:replace="~{view/kkutu/product::product(id='Me',title=#{kkutu.product.me.title})}">
+        <th:block layout:fragment="content">
+            <div class="moremi my-image"></div>
+            <div class="my-stat">
+                <div class="jt-image my-stat-level"></div>
+                <div class="my-stat-name ellipse"></div>
+                <div class="my-stat-record"></div>
+                <div class="my-stat-ping"></div>
+                <div>
+                    <div class="graph my-okg">
+                        <div class="graph-bar" style="width: NaN%;"></div>
+                    </div>
+                    <div class="bar-text my-okg-text"></div>
+                    <div class="expl" style="width: initial;">
+                        <div style="color: #CCCCCC;" th:utext="#{kkutu.product.me.okgExpl}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-level"></div>
+            <div class="graph my-gauge">
+                <div class="graph-bar" style="width: NaN%;"></div>
+            </div>
+            <div class="bar-text my-gauge-text"></div>
+        </th:block>
+    </th:block>
+    <th:block
+            layout:replace="~{view/kkutu/product::product(id='TLXFQZ',title=#{portal.ad.title},createWithShown=true)}">
+        <th:block layout:fragment="content">
+            <ins class="kakao_ad_area"
+                 style = "display:none;"
+                 data-ad-unit = "DAN-EYG7HMjQqivIXFNa"
+                 data-ad-width = "320"
+                 data-ad-height = "100"
+            ></ins>
+            <ins class="kakao_ad_area"
+                 style = "display:none;"
+                 data-ad-unit = "DAN-ftEmFfVSbwkdD33G"
+                 data-ad-width = "320"
+                 data-ad-height = "50"
+            ></ins>
+        </th:block>
+    </th:block>
+    <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+    <div id="MessageOverlay"></div>
+    
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?compat=recaptcha" async defer type="text/javascript"></script>
+    <script th:src="@{'https://cdn.kkutu.io/js/kawaiii.min.js?rv=' + ${runnerVersion}}" type="text/javascript"></script>
+    <script th:src="@{'https://cdn.kkutu.io/js/in_game_kkutu.min.js?rv=' + ${runnerVersion}}" type="text/javascript"></script>
+</div>
